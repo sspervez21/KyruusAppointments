@@ -1,0 +1,205 @@
+consumes:
+- application/json
+info:
+  description: Kyruus Doctor Appointments
+  title: Kyruus
+  version: 0.1.0
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
+paths:
+  /doctors:
+    post:
+      operationId: "CreateDoctor"
+      parameters:
+        - in: body
+          name: CreateDoctorInput
+          required: true
+          schema:
+            $ref: "#/definitions/Doctor"
+      responses:
+        200:
+          description: "OK"
+        409:
+          description: "Doctor with id already exists"
+          schema:
+            $ref: "#/definitions/BadRequest"
+  /doctors/{doctorId}:
+    get:
+      operationId: "GetDoctor"
+      parameters:
+        - in: path
+          name: doctorId
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Doctor"
+        404:
+          description: "Doctor not found"
+          schema:
+            $ref: "#/definitions/BadRequest"
+    put:
+      operationId: "UpdateDoctor"
+      parameters:
+        - in: path
+          name: doctorId
+          required: true
+          type: integer
+        - in: body
+          name: UpdateDoctorInput
+          required: true
+          schema:
+            $ref: "#/definitions/Doctor"
+      responses:  
+        200:
+          description: "OK"
+        404:
+          description: "Doctor does not exists"
+          schema:
+            $ref: "#/definitions/BadRequest"
+    delete:
+      operationId: "DeleteDoctor"
+      parameters:
+        - in: path
+          name: doctorId
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "OK"
+        404:
+          description: "Doctor does not exists"
+          schema:
+            $ref: "#/definitions/BadRequest"
+  /appointments:
+    post:
+      operationId: "CreateAppointment"
+      parameters:
+        - in: body
+          name: CreateAppointment
+          required: true
+          schema:
+            $ref: "#/definitions/Appointment"
+      responses:
+        200:
+          description: "OK"
+        409:
+          description: "Appointment could not be created"
+          schema:
+            $ref: "#/definitions/BadRequest"
+    delete:
+      operationId: "DeleteAppointment"
+      parameters:
+        - in: body
+          name: DeleteAppointment
+          required: true
+          schema:
+            $ref: "#/definitions/Appointment"
+      responses:
+        200:
+          description: "OK"
+        404:
+          description: "Appointment does not exists"
+          schema:
+            $ref: "#/definitions/BadRequest"
+  /appointments/{doctorId}:
+    get:
+      operationId: "GetAppointments"
+      parameters:
+        - in: path
+          name: doctorId
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Appointment"
+        404:
+          description: "Doctor not found"
+          schema:
+            $ref: "#/definitions/BadRequest"
+definitions:
+  NotFound:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    description: "Not Found object"
+  BadRequest:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    description: "Bad Request object"
+  Doctor:
+    type: object
+    properties:
+      name:
+        type: string
+      id:
+        type: integer
+      locations:
+        type: array
+        items:
+          type: string
+      schedule:
+        type: array
+        items:
+          $ref: "#/definitions/Appointment"
+    description: "A doctor"
+    required:
+      - name
+      - id
+      - locations
+      - schedule
+  Appointment:
+    type: object
+    properties:
+      doctorId:
+        type: integer
+      locationId:
+        type: string
+      day:
+        type: string
+      time:
+        type: integer
+    description: "A doctor's appointment"
+    required:
+      - doctorId
+      - locationId
+      - day
+      - time
+  Time:
+    type: object
+    properties:
+      day:
+        type: string
+      hour:
+        type: integer
+    description: "The time value representing a doctor's appointment"
+    required:
+      - day
+      - hour
+  AppointmentList:
+    type: object
+    properties:
+      list:
+        type: array
+        items:
+          $ref: "#/definitions/Appointment"
+        minItems: 1
+    description: "A list of appointments"
+    required:
+      - list

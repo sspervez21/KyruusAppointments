@@ -1,0 +1,6 @@
+{
+  "name"     : "John Doe",
+  "id"       : 2,
+  "locations"   : ["Seattle Practice 1", "Seattle Practice 2", "Seattle Practice 3"],
+  "schedule"    : [{"doctorId" : 2, "locationId" : "Seattle Practice 1", "day" : "Thursday", "time" : 3}, {"doctorId" : 2, "locationId" : "Seattle Practice 3", "day" : "Monday", "time" : 3}]
+}
